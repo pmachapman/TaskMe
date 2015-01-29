@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Program.cs" company="Peter Chapman">
-// Copyright 2014 Peter Chapman. See https://github.com/pmachapman/TaskMe/ for licence details.
+// Copyright 2015 Peter Chapman. See https://github.com/pmachapman/TaskMe/ for licence details.
 // </copyright>
 // -----------------------------------------------------------------------
 

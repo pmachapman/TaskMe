@@ -1,4 +1,10 @@
-﻿namespace Conglomo.TaskMe
+﻿// -----------------------------------------------------------------------
+// <copyright file="FormTask.Designer.cs" company="Peter Chapman">
+// Copyright 2015 Peter Chapman. See https://github.com/pmachapman/TaskMe/ for licence details.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace Conglomo.TaskMe
 {
     partial class FormTask
     {
