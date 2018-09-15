@@ -185,7 +185,8 @@ FakesAssemblies/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -212,3 +213,8 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+
+# Visual Studio 2017 and Visual Studio Code
+.vs
+.vscode
