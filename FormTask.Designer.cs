@@ -46,7 +46,7 @@ namespace Conglomo.TaskMe
             // 
             this.AddButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AddButton.Location = new System.Drawing.Point(314, 12);
+            this.AddButton.Location = new System.Drawing.Point(314, 11);
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(40, 21);
             this.AddButton.TabIndex = 1;
@@ -61,9 +61,9 @@ namespace Conglomo.TaskMe
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TasksCheckedListBox.FormattingEnabled = true;
             this.TasksCheckedListBox.IntegralHeight = false;
-            this.TasksCheckedListBox.Location = new System.Drawing.Point(12, 39);
+            this.TasksCheckedListBox.Location = new System.Drawing.Point(12, 38);
             this.TasksCheckedListBox.Name = "TasksCheckedListBox";
-            this.TasksCheckedListBox.Size = new System.Drawing.Size(341, 131);
+            this.TasksCheckedListBox.Size = new System.Drawing.Size(342, 132);
             this.TasksCheckedListBox.TabIndex = 2;
             this.TasksCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TasksCheckedListBox_ItemCheck);
             this.TasksCheckedListBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TasksCheckedListBox_KeyUp);
@@ -72,9 +72,9 @@ namespace Conglomo.TaskMe
             // 
             this.TaskTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TaskTextBox.Location = new System.Drawing.Point(13, 13);
+            this.TaskTextBox.Location = new System.Drawing.Point(12, 12);
             this.TaskTextBox.Name = "TaskTextBox";
-            this.TaskTextBox.Size = new System.Drawing.Size(295, 20);
+            this.TaskTextBox.Size = new System.Drawing.Size(296, 20);
             this.TaskTextBox.TabIndex = 0;
             // 
             // FormTask

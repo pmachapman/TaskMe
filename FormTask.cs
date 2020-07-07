@@ -16,7 +16,7 @@ namespace Conglomo.TaskMe
     using System.Windows.Forms;
 
     /// <summary>
-    /// THe main task manager form.
+    /// The main task manager form.
     /// </summary>
     public partial class FormTask : Form
     {
@@ -41,7 +41,7 @@ namespace Conglomo.TaskMe
                     xmlFile.WriteLine("<?xml version=\"1.0\" standalone=\"yes\"?>");
                     xmlFile.WriteLine("<Tasks>");
                     xmlFile.WriteLine("  <Task Name=\"Welcome To Task Me\" Completed=\"False\" />");
-                    xmlFile.WriteLine("  <Task Name=\"©2014 Peter Chapman\" Completed=\"False\" />");
+                    xmlFile.WriteLine("  <Task Name=\"©2015 Peter Chapman\" Completed=\"False\" />");
                     xmlFile.WriteLine("  <Task Name=\"To delete a task, click on it then press delete\" Completed=\"False\" />");
                     xmlFile.WriteLine("</Tasks>");
                 }
@@ -57,7 +57,7 @@ namespace Conglomo.TaskMe
                     || ex is SecurityException
                     || ex is UnauthorizedAccessException)
                 {
-                    MessageBox.Show("Tasks.xml could not be created", "Task Me", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("Tasks.xml could not be created", "Task Me", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace Conglomo.TaskMe
                 if (ex is FileNotFoundException
                     || ex is SecurityException)
                 {
-                    MessageBox.Show("Your task could not be added", "Task Me", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("Your task could not be added", "Task Me", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 else
                 {
@@ -215,7 +215,24 @@ namespace Conglomo.TaskMe
                         CreateSampleDatabase();
 
                         // Load the Tasks XML file (this time it should work!)
-                        tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                        try
+                        {
+                            tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                        }
+                        catch (Exception innerException)
+                        {
+                            if (innerException is FileNotFoundException
+                                || innerException is SecurityException)
+                            {
+                                // An error has already been displayed - exit
+                                Application.Exit();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+
                     }
                     else
                     {
@@ -271,7 +288,11 @@ namespace Conglomo.TaskMe
                     string taskName = row["Name"].ToString();
 
                     // Task completion status (true or false)
-                    bool completed = row["Completed"] as bool? ?? false;
+                    bool completed;
+                    if (!bool.TryParse(row["Completed"].ToString(), out completed))
+                    {
+                        completed = false;
+                    }
 
                     // Add the task to the checked list box
                     this.TasksCheckedListBox.Items.Add(taskName, completed);
@@ -341,11 +362,31 @@ namespace Conglomo.TaskMe
                 DataRow row = table.Rows[0];
 
                 // Get the window's settings
-                this.Left = row["Left"] as int? ?? this.Left;
-                this.Top = row["Top"] as int? ?? this.Top;
-                this.Height = row["Height"] as int? ?? this.Height;
-                this.Width = row["Width"] as int? ?? this.Width;
-                this.WindowState = row["WindowState"] as FormWindowState? ?? this.WindowState;
+                int left;
+                if (int.TryParse(row["Left"].ToString(), out left))
+                {
+                    this.Left = left;
+                }
+
+                int top;
+                if (int.TryParse(row["Top"].ToString(), out top))
+                {
+                    this.Top = top;
+                }
+
+                int height;
+                if (int.TryParse(row["Height"].ToString(), out height))
+                {
+                    this.Height = height;
+                }
+
+                int width;
+                if (int.TryParse(row["Width"].ToString(), out width))
+                {
+                    this.Width = width;
+                }
+
+                this.WindowState = (FormWindowState)Enum.Parse(typeof(FormWindowState), row["WindowState"].ToString(), true);
             }
             catch (Exception ex)
             {
@@ -359,7 +400,7 @@ namespace Conglomo.TaskMe
                     || ex is NoNullAllowedException
                     || ex is SecurityException)
                 {
-                    MessageBox.Show("There was a problem writing to the Tasks.xml - Task Me will probably not function properly.", "Task Me", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("There was a problem writing to the Tasks.xml - Task Me will probably not function properly.", "Task Me", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 else
                 {
@@ -390,8 +431,15 @@ namespace Conglomo.TaskMe
                     // Get the new value
                     bool newValue = e.NewValue == CheckState.Checked;
 
+                    // Get the value in thye database
+                    bool completed;
+                    if (!bool.TryParse(tasks.Tables["Task"].Rows[e.Index]["Completed"].ToString(), out completed))
+                    {
+                        completed = false;
+                    }
+
                     // If the new value is the same as the value in the database
-                    if (tasks.Tables["Task"].Rows[e.Index]["Completed"] as bool? ?? false != newValue && e.Index != -1)
+                    if (completed != newValue && e.Index != -1)
                     {
                         // Update the row in the dataset's checked value
                         tasks.Tables["Task"].Rows[e.Index]["Completed"] = newValue;
@@ -409,7 +457,7 @@ namespace Conglomo.TaskMe
                 if (ex is FileNotFoundException
                     || ex is SecurityException)
                 {
-                    MessageBox.Show("The status of your task could not be changed", "Task Me", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBox.Show("The status of your task could not be changed", "Task Me", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 else
                 {
@@ -458,7 +506,7 @@ namespace Conglomo.TaskMe
                     if (ex is FileNotFoundException
                         || ex is SecurityException)
                     {
-                        MessageBox.Show("Your task could not be deleted", "Task Me", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBox.Show("Your task could not be deleted", "Task Me", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
                     else
                     {
