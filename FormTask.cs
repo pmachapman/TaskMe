@@ -21,6 +21,11 @@ namespace Conglomo.TaskMe
     public partial class FormTask : Form
     {
         /// <summary>
+        /// The file name to the tasks file.
+        /// </summary>
+        private static readonly string fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks.xml");
+
+        /// <summary>
         /// Initialises a new instance of the <see cref="FormTask"/> class.
         /// </summary>
         public FormTask()
@@ -36,7 +41,7 @@ namespace Conglomo.TaskMe
         {
             try
             {
-                using (StreamWriter xmlFile = new StreamWriter("Tasks.xml"))
+                using (StreamWriter xmlFile = new StreamWriter(fileName))
                 {
                     xmlFile.WriteLine("<?xml version=\"1.0\" standalone=\"yes\"?>");
                     xmlFile.WriteLine("<Tasks>");
@@ -86,7 +91,7 @@ namespace Conglomo.TaskMe
                         tasks.Locale = CultureInfo.CurrentCulture;
 
                         // Load the Tasks from the XML file
-                        tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                        tasks.ReadXml(fileName, XmlReadMode.Auto);
 
                         // Ensure we have a task table
                         if (tasks.Tables["Task"] == default(DataTable))
@@ -127,7 +132,7 @@ namespace Conglomo.TaskMe
                         tasks.AcceptChanges();
 
                         // Write the updated dataset to the XML file
-                        tasks.WriteXml("Tasks.xml");
+                        tasks.WriteXml(fileName);
 
                         // Add the new task to the checked list box
                         this.TasksCheckedListBox.Items.Add(this.TaskTextBox.Text, false);
@@ -168,7 +173,7 @@ namespace Conglomo.TaskMe
                     tasks.Locale = CultureInfo.CurrentCulture;
 
                     // Load the Tasks from the XML file
-                    tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                    tasks.ReadXml(fileName, XmlReadMode.Auto);
 
                     // Save the window dimensions
                     this.WriteSettings(tasks);
@@ -204,7 +209,7 @@ namespace Conglomo.TaskMe
                 // Load the Tasks from the XML file if possible
                 try
                 {
-                    tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                    tasks.ReadXml(fileName, XmlReadMode.Auto);
                 }
                 catch (Exception ex)
                 {
@@ -217,7 +222,7 @@ namespace Conglomo.TaskMe
                         // Load the Tasks XML file (this time it should work!)
                         try
                         {
-                            tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                            tasks.ReadXml(fileName, XmlReadMode.Auto);
                         }
                         catch (Exception innerException)
                         {
@@ -255,7 +260,7 @@ namespace Conglomo.TaskMe
                         CreateSampleDatabase();
 
                         // Load the Tasks XML file (this time it should work!)
-                        tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                        tasks.ReadXml(fileName, XmlReadMode.Auto);
 
                         // Try to load the tasks again
                         this.LoadTasks(tasks);
@@ -351,7 +356,7 @@ namespace Conglomo.TaskMe
                         tasks.AcceptChanges();
 
                         // Write the updated dataset to the XML file
-                        tasks.WriteXml("Tasks.xml");
+                        tasks.WriteXml(fileName);
                     }
 
                     // Load the table
@@ -426,7 +431,7 @@ namespace Conglomo.TaskMe
                     tasks.Locale = CultureInfo.CurrentCulture;
 
                     // Load the Tasks from the XML file
-                    tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                    tasks.ReadXml(fileName, XmlReadMode.Auto);
 
                     // Get the new value
                     bool newValue = e.NewValue == CheckState.Checked;
@@ -448,7 +453,7 @@ namespace Conglomo.TaskMe
                         tasks.AcceptChanges();
 
                         // Write the updated dataset to the XML file
-                        tasks.WriteXml("Tasks.xml");
+                        tasks.WriteXml(fileName);
                     }
                 }
             }
@@ -486,7 +491,7 @@ namespace Conglomo.TaskMe
                         tasks.Locale = CultureInfo.CurrentCulture;
 
                         // Load the Tasks from the XML file
-                        tasks.ReadXml("Tasks.xml", XmlReadMode.Auto);
+                        tasks.ReadXml(fileName, XmlReadMode.Auto);
 
                         // Delete the selected row
                         tasks.Tables["Task"].Rows[this.TasksCheckedListBox.SelectedIndex].Delete();
@@ -495,10 +500,24 @@ namespace Conglomo.TaskMe
                         tasks.AcceptChanges();
 
                         // Write the updated dataset to the XML file
-                        tasks.WriteXml("Tasks.xml");
+                        tasks.WriteXml(fileName);
 
                         // Remove the selected item from the checked list box
-                        this.TasksCheckedListBox.Items.RemoveAt(this.TasksCheckedListBox.SelectedIndex);
+                        int index = this.TasksCheckedListBox.SelectedIndex;
+                        this.TasksCheckedListBox.Items.RemoveAt(index);
+
+                        // Select an item at the previous index, if possible
+                        if (this.TasksCheckedListBox.Items.Count > 0)
+                        {
+                            if (this.TasksCheckedListBox.Items.Count - 1 < index)
+                            {
+                                this.TasksCheckedListBox.SelectedIndex = this.TasksCheckedListBox.Items.Count - 1;
+                            }
+                            else
+                            {
+                                this.TasksCheckedListBox.SelectedIndex = index;
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -543,7 +562,7 @@ namespace Conglomo.TaskMe
                 tasks.AcceptChanges();
 
                 // Write the updated dataset to the XML file
-                tasks.WriteXml("Tasks.xml");
+                tasks.WriteXml(fileName);
             }
             catch (Exception ex)
             {
