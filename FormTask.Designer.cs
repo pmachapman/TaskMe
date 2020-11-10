@@ -66,6 +66,7 @@ namespace Conglomo.TaskMe
             this.TasksCheckedListBox.Size = new System.Drawing.Size(342, 132);
             this.TasksCheckedListBox.TabIndex = 2;
             this.TasksCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.TasksCheckedListBox_ItemCheck);
+            this.TasksCheckedListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TasksCheckedListBox_KeyDown);
             this.TasksCheckedListBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TasksCheckedListBox_KeyUp);
             // 
             // TaskTextBox

@@ -12,6 +12,7 @@ namespace Conglomo.TaskMe
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Security;
     using System.Windows.Forms;
 
@@ -293,8 +294,7 @@ namespace Conglomo.TaskMe
                     string taskName = row["Name"].ToString();
 
                     // Task completion status (true or false)
-                    bool completed;
-                    if (!bool.TryParse(row["Completed"].ToString(), out completed))
+                    if (!bool.TryParse(row["Completed"].ToString(), out bool completed))
                     {
                         completed = false;
                     }
@@ -367,26 +367,22 @@ namespace Conglomo.TaskMe
                 DataRow row = table.Rows[0];
 
                 // Get the window's settings
-                int left;
-                if (int.TryParse(row["Left"].ToString(), out left))
+                if (int.TryParse(row["Left"].ToString(), out int left))
                 {
                     this.Left = left;
                 }
 
-                int top;
-                if (int.TryParse(row["Top"].ToString(), out top))
+                if (int.TryParse(row["Top"].ToString(), out int top))
                 {
                     this.Top = top;
                 }
 
-                int height;
-                if (int.TryParse(row["Height"].ToString(), out height))
+                if (int.TryParse(row["Height"].ToString(), out int height))
                 {
                     this.Height = height;
                 }
 
-                int width;
-                if (int.TryParse(row["Width"].ToString(), out width))
+                if (int.TryParse(row["Width"].ToString(), out int width))
                 {
                     this.Width = width;
                 }
@@ -436,9 +432,8 @@ namespace Conglomo.TaskMe
                     // Get the new value
                     bool newValue = e.NewValue == CheckState.Checked;
 
-                    // Get the value in thye database
-                    bool completed;
-                    if (!bool.TryParse(tasks.Tables["Task"].Rows[e.Index]["Completed"].ToString(), out completed))
+                    // Get the value in the database
+                    if (!bool.TryParse(tasks.Tables["Task"].Rows[e.Index]["Completed"].ToString(), out bool completed))
                     {
                         completed = false;
                     }
@@ -468,6 +463,29 @@ namespace Conglomo.TaskMe
                 {
                     throw;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the Tasks CheckedListBox.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
+        private void TasksCheckedListBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Copy the selected task
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                try
+                {
+                    Clipboard.SetDataObject(this.TasksCheckedListBox.SelectedItem.ToString(), true, 10, 100);
+                }
+#pragma warning disable CA1031 // Do not catch general exception types
+                catch (ExternalException)
+                {
+                    // Ignore - nothing we can do
+                }
+#pragma warning restore CA1031 // Do not catch general exception types
             }
         }
 
