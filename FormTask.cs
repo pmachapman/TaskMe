@@ -486,6 +486,9 @@ namespace Conglomo.TaskMe
                     // Ignore - nothing we can do
                 }
 #pragma warning restore CA1031 // Do not catch general exception types
+
+                // Stop propagation
+                e.SuppressKeyPress = true;
             }
         }
 
